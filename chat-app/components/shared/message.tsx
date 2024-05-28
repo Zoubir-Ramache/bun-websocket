@@ -6,8 +6,8 @@ type PROPS={
 }
 function Message({recieved,content }:PROPS) {
   return (
-    <div  className=' '>
-        <p className={cn( recieved ?"bg-primary" :"bg-gray-300")} >
+    <div  className={cn('  m-2  rounded-lg p-2 text-foreground w-1/2' , recieved ? 'bg-primary' :'bg-accent')}>
+        <p  >
 
             {content}
         
