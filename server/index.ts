@@ -1,35 +1,34 @@
 import { serve } from "bun";
 import { Database } from "bun:sqlite";
 const db = new Database("mydb.sqlite", { create: true });
-const userID=crypto.randomUUID()
 db.query("create table if not exists   Messages(id integer primary key  , content string , userId string)").run();
 // db.query("insert into Messages  (content  , userId) values ('first message' , 'hhhhhh') ").run();
 
 // const query = db.query("select *  from Messages");
 // const data = query.all();
 // console.log(data);
-
 serve({
   websocket: {
     
     message(ws, message) {
-      console.log(message);
       
-      ws.send(message);
+      ws.send(JSON.stringify({message , data:ws.data}))
+      
     },
     open(ws) {
       
-      console.log("connection is open ");
+      console.log("connection is open " ,ws.data);
     },
     close(ws, code, reason) {
       console.log("connection is closed", code, reason);
     },
   },
   fetch(request, server) {
+    const userID=crypto.randomUUID()
     if (server.upgrade(request , {
       headers:{
-        "Set-Cookie": `userID=${userID} `
-      }
+        "Set-Cookie": `userID=${userID}; SameSite=Strict `
+      } , data:{userID}
     })) {
       return;
     }
