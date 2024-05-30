@@ -16,6 +16,7 @@ export default function Home() {
   const [messageList, setMassageList] = useState<MessageData[]>([]);
   const { lastMessage, sendMessage   } = useWebSocket("ws://localhost:3000");
   const [MyMessage, setMyMessage] = useState<string>("");
+  
   const handleClick = () => {
     sendMessage(MyMessage);
     
@@ -34,7 +35,7 @@ export default function Home() {
   return (
     <div className=" w-full  h-screen overflow-x-hidden overflow-y-scroll relative ">
       {messageList.map(({message , userID}, index) =>   (
-        <Message recieved content={message} key={`${message}${index}`} />
+        <Message recieved={cookie.userID !=userID} content={message} key={`${message}${index}`} />
       ))}
       {!lastMessage?.data && (
         <div className="  flex justify-center items-center h-full text-gray-500 text-xl font-bold">
