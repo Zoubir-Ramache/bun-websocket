@@ -14,8 +14,9 @@ interface MessageData {
 
 export default function Home() {
   const [messageList, setMassageList] = useState<MessageData[]>([]);
-  const { lastMessage, sendMessage   } = useWebSocket("ws://localhost:3000");
+  const { lastMessage, sendMessage   } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_SERVER_API}`);
   const [MyMessage, setMyMessage] = useState<string>("");
+  console.log();
   
   const handleClick = () => {
     sendMessage(MyMessage);
