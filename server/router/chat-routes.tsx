@@ -1,51 +1,25 @@
-import { serve } from "bun";
+import type { ServerWebSocket } from "bun";
 
-export const createConnections=async ()=>{
+const connections = new Set<any>();
+const chatRouter = (ws: ServerWebSocket<unknown>, message: string | Buffer) => {
+  const res = JSON.stringify({ message, data: ws.data });
 
-  const connections = new Set<any>();
-  
-
-  serve({
-    websocket: {
-      message(ws, message) {
-        const res = JSON.stringify({ message, data: ws.data });
-        
-        
-        for (let conn of connections) {
-          
-          
-          if (conn.readyState == WebSocket.OPEN) {
-            conn.send(res);
-            
-          }
-        }
-      },
-      open(ws) {
-        connections.add(ws );
-        
-        
-        console.log("connection is open ", ws.data);
-      },
-      close(ws, code, reason) {
-        connections.delete(ws);
-        console.log("connection is closed", code, reason);
-      },
-    },
-    fetch(request, server) {
-      const userID = crypto.randomUUID();
-      if (
-        server.upgrade(request, {
-          headers: {
-            "Set-Cookie": `userID=${userID}; SameSite=Strict `,
-          },
-          data: { userID },
-        })
-      ) {
-        return;
-      }
-      
-      return new Response("failed", { status: 500 });
-    },
-  });
-  
+  for (let conn of connections) {
+    if (conn.readyState == WebSocket.OPEN) {
+      conn.send(res);
     }
+  }
+};
+const openConnection = (ws: ServerWebSocket<unknown>) => {
+  connections.add(ws);
+};
+const closeConnection = (
+  ws: ServerWebSocket<unknown>,
+  code: number,
+  reason: string
+) => {
+  connections.delete(ws);
+  console.log("connection is closed", code, reason);
+};
+
+export { openConnection, chatRouter, closeConnection };

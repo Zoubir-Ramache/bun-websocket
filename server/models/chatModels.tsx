@@ -9,3 +9,5 @@ const createChat=(chatName:string ,userID:string )=>{
     db.query(query2).run()
     
 }
+
+export {createChat}

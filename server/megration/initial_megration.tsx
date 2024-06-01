@@ -16,7 +16,7 @@ const createTables =  (db: Database) => {
   ).run();
 
   db.query(
-    "create table if not exists   Chats(id integer primary key  , userID string , ChatID integer)"
+    "create table if not exists   Chats(id integer primary key  , userID string , chatID integer)"
   ).run();
 
   db.query(
