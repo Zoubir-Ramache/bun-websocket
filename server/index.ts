@@ -1,54 +1,42 @@
-import { serve, type ServerWebSocket } from "bun";
-import { Database } from "bun:sqlite";
-const db = new Database("mydb.sqlite", { create: true });
-db.query(
-  "create table if not exists   Messages(id integer primary key  , content string , userId string)"
-).run();
-// db.query("insert into Messages  (content  , userId) values ('first message' , 'hhhhhh') ").run();
+import { serve } from "bun";
+import { createDatabase } from "./megration/initial_megration";
+import { userRouter } from "./router/user-routes";
+import {
+  chatRouter,
+  openConnection,
+  closeConnection,
+} from "./router/chat-routes";
 
-// const query = db.query("select *  from Messages");
-// const data = query.all();
-// console.log(data);
-const connections = new Set<any>();
+createDatabase();
+
 serve({
+  fetch(request, server) {
+    if (request.url.endsWith("/login")) {
+      return userRouter(request, server);
+    } else if (request.url.endsWith("/ws")) {
+      const userID = crypto.randomUUID();
+
+      if (
+        server.upgrade(request, {
+          headers: {
+            "Set-Cookie": `userID=${userID}; SameSite=Strict `,
+          },
+          data: { userID },
+        })
+      )
+        return;
+    }
+    return new Response("you are lost", { status: 404 });
+  },
   websocket: {
     message(ws, message) {
-      const res = JSON.stringify({ message, data: ws.data });
-
-      
-      for (let conn of connections) {
-        
-        
-        if (conn.readyState == WebSocket.OPEN) {
-          conn.send(res);
-          
-        }
-      }
+      chatRouter(ws, message);
     },
     open(ws) {
-      connections.add(ws );
-      
-      
-      console.log("connection is open ", ws.data);
+      openConnection(ws);
     },
     close(ws, code, reason) {
-      connections.delete(ws);
-      console.log("connection is closed", code, reason);
+      closeConnection(ws, code, reason);
     },
-  },
-  fetch(request, server) {
-    const userID = crypto.randomUUID();
-    if (
-      server.upgrade(request, {
-        headers: {
-          "Set-Cookie": `userID=${userID}; SameSite=Strict `,
-        },
-        data: { userID },
-      })
-    ) {
-      return;
-    }
-
-    return new Response("failed", { status: 500 });
   },
 });
