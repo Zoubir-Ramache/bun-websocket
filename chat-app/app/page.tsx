@@ -17,7 +17,6 @@ export default function Home() {
   const { lastMessage, sendMessage   } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_SERVER_API}/ws`);
   const [MyMessage, setMyMessage] = useState<string>("");
   console.log();
-  
   const handleClick = () => {
     sendMessage(MyMessage);
     
