@@ -175,4 +175,5 @@ dist
 .DS_Store
 
 #sqlite database 
-*.sqlite
+server/mydb.sqlite
+
