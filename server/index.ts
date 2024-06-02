@@ -10,9 +10,9 @@ import {
 createDatabase();
 
 serve({
-  fetch(request, server) {
+  async fetch(request, server) {
     if (request.url.endsWith("/login")) {
-      return userRouter(request, server);
+      return await userRouter(request, server);
     } else if (request.url.endsWith("/ws")) {
       const userID = crypto.randomUUID();
 
@@ -31,6 +31,7 @@ serve({
   websocket: {
     message(ws, message) {
       chatRouter(ws, message);
+      
     },
     open(ws) {
       openConnection(ws);

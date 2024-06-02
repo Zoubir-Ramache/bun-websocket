@@ -11,6 +11,8 @@ const chatRouter = (ws: ServerWebSocket<unknown>, message: string | Buffer) => {
   }
 };
 const openConnection = (ws: ServerWebSocket<unknown>) => {
+  console.log("connected");
+  
   connections.add(ws);
 };
 const closeConnection = (
