@@ -14,9 +14,9 @@ interface MessageData {
 
 export default function Home() {
   const [messageList, setMassageList] = useState<MessageData[]>([]);
-  const { lastMessage, sendMessage   } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_SERVER_API}`);
+  const { sendMessage , lastMessage } = useWebSocket(`ws://${process.env.NEXT_PUBLIC_SERVER_API}/ws` )
   const [MyMessage, setMyMessage] = useState<string>("");
-  console.log();
+  
   
   const handleClick = () => {
     sendMessage(MyMessage);
@@ -34,13 +34,13 @@ export default function Home() {
     } 
   }, [lastMessage]);
   return (
-    <div className=" w-full  h-screen overflow-x-hidden overflow-y-scroll relative ">
+    <div className=" w-full   h-screen overflow-x-hidden overflow-y-scroll relative ">
       {messageList.map(({message , userID}, index) =>   (
         <Message recieved={cookie.userID !=userID} content={message} key={`${message}${index}`} />
       ))}
       {!lastMessage?.data && (
         <div className="  flex justify-center items-center h-full text-gray-500 text-xl font-bold">
-          there is no messages yet !
+          there is no messages yet ! 
         </div>
       )}
       <div className=" flex p-2  items-center   shadow-sm  fixed border-t-2 border-primary bg-accent  rounded-lg   w-full bottom-0  ">

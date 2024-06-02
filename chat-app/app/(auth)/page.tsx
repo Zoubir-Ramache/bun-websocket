@@ -9,8 +9,8 @@ function AuthPage() {
     
   return (
     <div className=' h-screen flex items-center justify-center gap-8   flex-col '>
-        <h1 className=' text-xl '>login</h1>
-        <form action={loginUser} >
+        <h1 className=' text-xl font-bold '>login</h1>
+        <form action={loginUser}  className=' flex flex-col gap-4'>
 
         <Input
         className=' w-52'
