@@ -1,10 +1,14 @@
 import { Input } from '@/components/ui/input'
 import SubmitButton from '@/components/shared/submit-button'
 import loginUser from '@/actions/loginUser'
-import React from 'react'
+import {cookies } from "next/headers"
+import { redirect } from 'next/navigation'
 
 function AuthPage() {
-    
+const userID =cookies().get("userID")
+if(userID){
+  redirect('chat')
+}
 
     
   return (
