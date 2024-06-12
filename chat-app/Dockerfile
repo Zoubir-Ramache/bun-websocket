@@ -1,9 +1,10 @@
 FROM node
 RUN npm install -g bun 
 WORKDIR /app
-COPY . .
+COPY package*.json .
 RUN bun install
-EXPOSE 3001
+COPY . .
+EXPOSE 8080
 CMD [ "bun", "dev" ]
 
 
