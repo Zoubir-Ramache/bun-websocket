@@ -6,3 +6,6 @@ dev:
 	tmux split-window -h
 	tmux send-keys 'cd chat-app && bun dev' C-m
 	tmux -2 attach-session -d
+
+up:
+	 docker compose up
